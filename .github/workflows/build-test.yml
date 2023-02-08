@@ -1,24 +1,19 @@
-name: dotnet package
+# Create a workflow to build and test a dotnet project using the latest version of .NET Core on push and pull request
 
-# on push or pull request
+name: Build and Test
+
 on: [push, pull_request]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: ["6.0", "7.0.x"]
-
+  build-and-test:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
+          dotnet-version: 6.0.x
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+      - name: Test with dotnet
+        run: dotnet test --configuration Release --no-build
